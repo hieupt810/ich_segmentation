@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ich-pipeline
-#SBATCH --partition=gpu
+#SBATCH --partition=amperenodes
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
