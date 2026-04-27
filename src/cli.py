@@ -88,6 +88,12 @@ def _add_shared_overrides(p: argparse.ArgumentParser) -> None:
         "--image-size", type=int, default=None, help="Override input resolution."
     )
     p.add_argument(
+        "--architecture",
+        type=str,
+        default=None,
+        help="Override SMP architecture (e.g., 'Unet', 'UnetPlusPlus', 'FPN', 'DeepLabV3').",
+    )
+    p.add_argument(
         "--encoder-name", type=str, default=None, help="Override SMP encoder name."
     )
     p.add_argument(

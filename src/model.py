@@ -6,6 +6,7 @@ import segmentation_models_pytorch as smp
 
 
 def build_model(
+    architecture: str,
     encoder_name: str,
     encoder_weights: str | None,
     num_clf_classes: int,
@@ -22,7 +23,7 @@ def build_model(
         "dropout": dropout,
         "pooling": pooling,
     }
-    return smp.UnetPlusPlus(
+    return getattr(smp, architecture)(
         encoder_name=encoder_name,
         encoder_weights=encoder_weights,
         in_channels=in_channels,

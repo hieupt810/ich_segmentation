@@ -1,24 +1,3 @@
-"""Batch skull-stripping of NIfTI volumes via the SynthStrip Docker image.
-
-Runs ``freesurfer/synthstrip`` against every ``.nii`` / ``.nii.gz`` file in an
-input directory and writes stripped volumes (and optional binary masks) to an
-output directory. Intended for brain CT/MRI. CT inputs should be pre-clipped
-to a sane Hounsfield range (e.g. [0, 100] HU) for optimal mask quality, since
-SynthStrip was primarily trained on MRI-like intensity distributions and is
-only approximately contrast-agnostic at CT extremes.
-
-Usage
------
-    python synthstrip_batch.py /data/ct_raw /data/ct_stripped \\
-        --pull --workers 4 --border 1
-
-References
-----------
-SynthStrip: Hoopes et al., NeuroImage 2022. Docker image tag
-``freesurfer/synthstrip`` exposes ``synthstrip`` as its entrypoint, so all
-flags after the image name are forwarded to the binary directly.
-"""
-
 from __future__ import annotations
 
 import argparse

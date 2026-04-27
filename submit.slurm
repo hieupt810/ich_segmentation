@@ -11,7 +11,8 @@
 
 set -euo pipefail
 
-ENCODER_NAME="${1:?Usage: sbatch submit.slurm <encoder_name>}"
+ARCHITECTURE="${1:?Usage: sbatch submit.slurm <architecture> <encoder_name>}"
+ENCODER_NAME="${2:?Usage: sbatch submit.slurm <architecture> <encoder_name>}"
 
 ## Loading the required modules
 module reset
@@ -26,6 +27,7 @@ nvidia-smi || true
 ## Run the pipeline
 conda activate ich-segmentation
 python main.py all \
+    --architecture "${ARCHITECTURE}" \
     --encoder-name "${ENCODER_NAME}" \
     --epochs 50 \
     --clf-epochs 30 \

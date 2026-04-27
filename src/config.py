@@ -16,6 +16,7 @@ class Config:
     # ------------------------------------------------------------------
     # Model
     # ------------------------------------------------------------------
+    architecture: str = "UnetPlusPlus"
     encoder_name: str = "densenet201"
     encoder_weights: str | None = "imagenet"
     class_names: Sequence[str] = field(
@@ -84,7 +85,7 @@ class Config:
     # ------------------------------------------------------------------
     @property
     def output(self) -> Path:
-        return Path(f"output_{self.encoder_name}").resolve()
+        return Path(f"output_{self.encoder_name}")
 
     @property
     def device(self) -> str:

@@ -1,17 +1,3 @@
-"""Extract per-slice PNGs from NIfTI volumes for the ICH multi-task pipeline.
-
-Reads three sibling input folders — stripped scans, normal scans, and binary
-masks — pairs them by filename stem, and writes one PNG per axial slice into
-the layout expected by ``src/dataset.py``::
-
-    output/images/{patient}/{slice}_brain_stripped.png
-    output/images/{patient}/{slice}_subdural_stripped.png
-    output/images/{patient}/{slice}_brain_normal.png
-    output/masks/{patient}/{slice}.png
-
-Patient IDs come from the NIfTI filename stem (e.g. ``049.nii.gz`` -> ``049``).
-"""
-
 from __future__ import annotations
 
 import argparse
