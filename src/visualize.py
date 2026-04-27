@@ -65,9 +65,9 @@ def save_inference_artifacts(
     model: torch.nn.Module,
     val_loader: DataLoader,
     logger: logging.Logger,
-    max_samples: int = 16,
+    max_samples: int | None = None,
 ) -> Path:
-    """Save up to ``max_samples`` 4-panel inference grids under ``cfg.output / 'inference'``."""
+    """Save 4-panel inference grids under ``cfg.output / 'inference'`` (all slices when ``max_samples`` is None)."""
     out_dir = cfg.output / "inference"
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -89,7 +89,7 @@ def save_inference_artifacts(
         seg_logits = seg_logits.float()
 
         for i in range(images.shape[0]):
-            if saved >= max_samples:
+            if max_samples is not None and saved >= max_samples:
                 logger.info("Saved %d inference grids to %s", saved, out_dir)
                 return out_dir
             pid = patient_ids[i]
@@ -109,7 +109,9 @@ def save_inference_artifacts(
 
 
 def run_inference_artifacts(
-    cfg: Config, logger: logging.Logger | None = None, max_samples: int = 16
+    cfg: Config,
+    logger: logging.Logger | None = None,
+    max_samples: int | None = None,
 ) -> Path:
     """Top-level helper: build model, load best checkpoint, dump grids to ``output/inference``."""
     logger = logger or setup_logging()

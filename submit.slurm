@@ -3,7 +3,7 @@
 #SBATCH --partition=amperenodes
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=03:00:00
 #SBATCH --output=ich-%j.out
@@ -27,8 +27,7 @@ python main.py all \
     --epochs 50 \
     --clf-epochs 30 \
     --batch-size 32 \
-    --workers "${SLURM_CPUS_PER_TASK:-4}" \
-    --max-vis-samples 16
+    --workers "${SLURM_CPUS_PER_TASK:-8}"
 
 ## Print completion message
 echo "[$(date '+%F %T')] Job completed: ${SLURM_JOB_ID:-local}"

@@ -39,8 +39,8 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument(
         "--max-vis-samples",
         type=int,
-        default=16,
-        help="Maximum number of inference grids to save (default: 16).",
+        default=None,
+        help="Cap the number of inference grids saved (default: save every validation slice).",
     )
     evaluate.set_defaults(func=_cmd_evaluate)
 
@@ -48,7 +48,7 @@ def build_parser() -> argparse.ArgumentParser:
         "all", help="Run train-seg, train-clf, and evaluate sequentially."
     )
     _add_shared_overrides(run_all)
-    run_all.add_argument("--max-vis-samples", type=int, default=16)
+    run_all.add_argument("--max-vis-samples", type=int, default=None)
     run_all.set_defaults(func=_cmd_all)
 
     return parser
