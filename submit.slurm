@@ -22,7 +22,7 @@ echo "[$(date '+%F %T')] Host: $(hostname) | Job: ${SLURM_JOB_ID:-local}"
 nvidia-smi || true
 
 ## Run the pipeline
-conda activate ct-segmentation
+conda activate ich-segmentation
 python main.py all \
     --epochs 50 \
     --clf-epochs 30 \
