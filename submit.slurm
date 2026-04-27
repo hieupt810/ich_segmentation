@@ -1,28 +1,28 @@
 #!/bin/bash
 #SBATCH --job-name=ich-pipeline
 #SBATCH --partition=amperenodes
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:1
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH --time=03:00:00
-#SBATCH --output=logs/ich-%j.out
-#SBATCH --error=logs/ich-%j.err
+#SBATCH --output=ich-%j.out
+#SBATCH --error=ich-%j.err
 
 set -euo pipefail
 
-cd "${SLURM_SUBMIT_DIR:-$(pwd)}"
-mkdir -p logs output
-
+## Loading the required modules
 module reset
-module load Anaconda3 GCC/14.2.0 CUDA/11.8.0 cuda11.8/toolkit cuDNN/8.9.2.26-CUDA-11.8.0
+module load Anaconda3 \
+    GCC/14.2.0 \
+    CUDA/11.8.0 cuda11.8/toolkit cuDNN/8.9.2.26-CUDA-11.8.0
 
-conda activate ich-segmentation
-
+## Print some information about the job
 echo "[$(date '+%F %T')] Host: $(hostname) | Job: ${SLURM_JOB_ID:-local}"
 nvidia-smi || true
 
+## Run the pipeline
+conda activate ct-segmentation
 python main.py all \
     --epochs 50 \
     --clf-epochs 30 \
@@ -30,4 +30,5 @@ python main.py all \
     --workers "${SLURM_CPUS_PER_TASK:-4}" \
     --max-vis-samples 16
 
-echo "[$(date '+%F %T')] Pipeline finished."
+## Print completion message
+echo "[$(date '+%F %T')] Job completed: ${SLURM_JOB_ID:-local}"
