@@ -1,5 +1,7 @@
 """Entry point for the ICH multi-task segmentation + classification pipeline."""
 
+import pprint
+
 from src import Config, apply_overrides, build_parser, set_seed, setup_logging
 
 
@@ -14,6 +16,7 @@ def main() -> None:
     set_seed(cfg.seed)
     cfg.output.mkdir(parents=True, exist_ok=True)
     logger = setup_logging()
+    logger.info("Config:\n%s", pprint.pformat(cfg, indent=2))
     logger.info(
         "Running '%s' on device=%s with output=%s",
         args.command,

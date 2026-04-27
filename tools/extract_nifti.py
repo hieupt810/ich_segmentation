@@ -190,7 +190,12 @@ def process_patient(
             slices = max(
                 slices,
                 _emit_image_volume(
-                    job.stripped, img_dir, stripped_windows, slice_axis, canonical, rot90
+                    job.stripped,
+                    img_dir,
+                    stripped_windows,
+                    slice_axis,
+                    canonical,
+                    rot90,
                 ),
             )
         if job.normal is not None:
@@ -206,7 +211,7 @@ def process_patient(
                 _emit_mask_volume(job.mask, mask_dir, slice_axis, canonical, rot90),
             )
         return job.patient_id, slices, None
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         return job.patient_id, 0, str(exc)
 
 
@@ -315,15 +320,15 @@ def main(argv: list[str] | None = None) -> int:
     workers = max(1, args.workers)
     LOGGER.info("processing %d patients with %d worker(s)", len(jobs), workers)
 
-    kw = dict(
-        images_root=images_root,
-        masks_root=masks_root,
-        stripped_windows=DEFAULT_STRIPPED_WINDOWS,
-        normal_windows=DEFAULT_NORMAL_WINDOWS,
-        slice_axis=args.slice_axis,
-        canonical=not args.no_canonical,
-        rot90=args.rot90,
-    )
+    kw = {
+        "images_root": images_root,
+        "masks_root": masks_root,
+        "stripped_windows": DEFAULT_STRIPPED_WINDOWS,
+        "normal_windows": DEFAULT_NORMAL_WINDOWS,
+        "slice_axis": args.slice_axis,
+        "canonical": not args.no_canonical,
+        "rot90": args.rot90,
+    }
 
     if workers == 1:
         results = (process_patient(j, **kw) for j in jobs)
