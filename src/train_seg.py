@@ -100,8 +100,8 @@ class SegmentationTrainer:
         return mean_loss
 
     @torch.no_grad()
-    def validate(self, epoch: int) -> tuple[float, float]:
-        """Compute mean validation loss and micro IoU via SMP metrics."""
+    def validate(self, epoch: int) -> tuple[float, float, float]:
+        """Compute mean validation loss plus per-image IoU and Dice averaged across the val set."""
         self.model.eval()
         total_loss = 0.0
         n_batches = 0
@@ -128,10 +128,21 @@ class SegmentationTrainer:
         fp = torch.cat(fp_all)
         fn = torch.cat(fn_all)
         tn = torch.cat(tn_all)
-        iou = float(smp.metrics.iou_score(tp, fp, fn, tn, reduction="micro"))
+        iou = float(
+            smp.metrics.iou_score(tp, fp, fn, tn, reduction="micro-imagewise")
+        )
+        dice = float(
+            smp.metrics.f1_score(tp, fp, fn, tn, reduction="micro-imagewise")
+        )
         mean_loss = total_loss / max(1, n_batches)
-        self.logger.info("[Epoch %d] val_loss=%.4f val_iou=%.4f", epoch, mean_loss, iou)
-        return mean_loss, iou
+        self.logger.info(
+            "[Epoch %d] val_loss=%.4f val_iou=%.4f val_dice=%.4f",
+            epoch,
+            mean_loss,
+            iou,
+            dice,
+        )
+        return mean_loss, iou, dice
 
     # ------------------------------------------------------------------
     # Checkpointing + main loop
@@ -161,7 +172,7 @@ class SegmentationTrainer:
         history: list[dict[str, float]] = []
         for epoch in range(1, self.cfg.epochs + 1):
             train_loss = self.train_one_epoch(epoch)
-            val_loss, val_iou = self.validate(epoch)
+            val_loss, val_iou, val_dice = self.validate(epoch)
             self.scheduler.step()
 
             if val_iou > self.best_iou:
@@ -174,6 +185,7 @@ class SegmentationTrainer:
                     "train_loss": train_loss,
                     "val_loss": val_loss,
                     "val_iou": val_iou,
+                    "val_dice": val_dice,
                 }
             )
 
