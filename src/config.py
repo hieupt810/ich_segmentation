@@ -82,7 +82,9 @@ class Config:
     # ------------------------------------------------------------------
     # Runtime
     # ------------------------------------------------------------------
-    output: Path = field(default_factory=lambda: Path("output"))
+    @property
+    def output(self) -> Path:
+        return Path(f"output_{self.encoder_name}").resolve()
 
     @property
     def device(self) -> str:

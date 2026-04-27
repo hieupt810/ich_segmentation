@@ -11,6 +11,8 @@
 
 set -euo pipefail
 
+ENCODER_NAME="${1:?Usage: sbatch submit.slurm <encoder_name>}"
+
 ## Loading the required modules
 module reset
 module load Anaconda3 \
@@ -24,6 +26,7 @@ nvidia-smi || true
 ## Run the pipeline
 conda activate ich-segmentation
 python main.py all \
+    --encoder-name "${ENCODER_NAME}" \
     --epochs 50 \
     --clf-epochs 30 \
     --batch-size 32 \
