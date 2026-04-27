@@ -16,7 +16,7 @@ def build_model(
     dropout: float = 0.2,
     pooling: str = "avg",
 ) -> smp.UnetPlusPlus:
-    """Builds a UNet++ model for segmentation and classification."""
+    """Builds a SMP model for segmentation and classification."""
     aux_params: dict[str, Any] = {
         "activation": None,
         "classes": num_clf_classes,
