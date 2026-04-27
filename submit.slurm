@@ -26,7 +26,7 @@ conda activate ich-segmentation
 python main.py all \
     --epochs 50 \
     --clf-epochs 30 \
-    --batch-size 64 \
+    --batch-size 32 \
     --workers "${SLURM_CPUS_PER_TASK:-4}" \
     --max-vis-samples 16
 
